@@ -260,12 +260,20 @@ export function discoverFromFiles(files: FileMap): DiscoveredNewsletter[] {
   return results;
 }
 
+function safeParseJson(content: string, filePath: string): Record<string, unknown> {
+  try {
+    return JSON.parse(content);
+  } catch (e) {
+    throw new Error(`Invalid JSON in "${filePath}": ${(e as Error).message}\nFirst 200 chars: ${content.slice(0, 200)}`);
+  }
+}
+
 export function renderNewsletter(files: FileMap, newsletter: DiscoveredNewsletter, lang: string): string | null {
   const jsonPath = lang === 'fr' && newsletter.frJsonPath ? newsletter.frJsonPath : newsletter.enJsonPath;
   if (lang === 'fr' && !newsletter.frJsonPath) return null;
   if (!(jsonPath in files)) return null;
 
-  const jsonData = JSON.parse(files[jsonPath]);
+  const jsonData = safeParseJson(files[jsonPath], jsonPath);
   let template = files[newsletter.templatePath];
 
   const footerPath = Object.keys(files).find(
@@ -273,10 +281,10 @@ export function renderNewsletter(files: FileMap, newsletter: DiscoveredNewslette
       p.endsWith(`pe-newsletter-footer-${lang}.json`) &&
       (newsletter.footerPattern === '' || p.startsWith(newsletter.footerPattern))
   );
-  const footerData = footerPath ? JSON.parse(files[footerPath]) : null;
+  const footerData = footerPath ? safeParseJson(files[footerPath], footerPath) : null;
 
   template = template.replace(/<app-pe-newsletter-header[^>]*>[\s\S]*?<\/app-pe-newsletter-header>/g,
-    () => renderHeader(jsonData.text?.edition || ''));
+    () => renderHeader((jsonData as Record<string, unknown>).text ? ((jsonData as Record<string, unknown>).text as Record<string, unknown>).edition as string || '' : ''));
   template = template.replace(/<app-pe-newsletter-footer[^>]*>[\s\S]*?<\/app-pe-newsletter-footer>/g,
     () => renderFooter(jsonData, footerData));
 

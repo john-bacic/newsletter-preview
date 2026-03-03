@@ -187,27 +187,31 @@ export default function Home() {
     setLoading(true);
     setError(null);
 
-    const body = renderNewsletter(files, nl, lang);
-    if (!body) {
-      setError(`Could not render ${nl.slug} in ${lang.toUpperCase()}`);
-      setLoading(false);
-      return;
-    }
+    try {
+      const body = renderNewsletter(files, nl, lang);
+      if (!body) {
+        setError(`Could not render ${nl.slug} in ${lang.toUpperCase()}`);
+        setLoading(false);
+        return;
+      }
 
-    let css = '';
-    if (nl.scssPath in files) {
-      try {
-        const res = await fetch('/api/compile-scss', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ scss: files[nl.scssPath] }),
-        });
-        const data = await res.json();
-        css = data.css || '';
-      } catch { /* no component CSS */ }
-    }
+      let css = '';
+      if (nl.scssPath in files) {
+        try {
+          const res = await fetch('/api/compile-scss', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scss: files[nl.scssPath] }),
+          });
+          const data = await res.json();
+          css = data.css || '';
+        } catch { /* no component CSS */ }
+      }
 
-    setPreview({ html: body, css, nl, lang });
+      setPreview({ html: body, css, nl, lang });
+    } catch (err) {
+      setError((err as Error).message);
+    }
     setLoading(false);
   }, [files]);
 
