@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   FileMap,
   DiscoveredNewsletter,
@@ -211,8 +211,10 @@ export default function Home() {
     setLoading(false);
   }, [files]);
 
-  const writeIframe = useCallback(() => {
-    if (!iframeRef.current || !preview) return;
+  const [iframeReady, setIframeReady] = useState(false);
+
+  useEffect(() => {
+    if (!iframeReady || !iframeRef.current || !preview) return;
     const doc = iframeRef.current.contentDocument;
     if (!doc) return;
     doc.open();
@@ -223,7 +225,7 @@ export default function Home() {
 <style>${SHELL_CSS}\n${preview.css}</style>
 </head><body><div class="pe-wrapper">${preview.html}</div></body></html>`);
     doc.close();
-  }, [preview]);
+  }, [preview, iframeReady]);
 
   // ─── PREVIEW VIEW ───
   if (preview) {
@@ -261,7 +263,7 @@ export default function Home() {
         </div>
         <iframe
           ref={iframeRef}
-          onLoad={writeIframe}
+          onLoad={() => setIframeReady(true)}
           style={{ flex: 1, border: 'none', width: '100%' }}
           srcDoc="<html><body></body></html>"
         />
