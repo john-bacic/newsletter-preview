@@ -11,6 +11,36 @@ import {
 const GIT_SHA = process.env.NEXT_PUBLIC_GIT_SHA || 'dev';
 const GIT_MSG = process.env.NEXT_PUBLIC_GIT_COMMIT_MSG || '';
 
+function ErrorPanel({ error, debug }: { error: string | null; debug: string | null }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!error) return null;
+  return (
+    <div style={{
+      margin: '20px auto', padding: '16px 24px', background: '#fff3f3',
+      border: '1px solid #ffcccc', borderRadius: 8, maxWidth: 700, width: '100%',
+    }}>
+      <div style={{ color: '#c0392b', fontSize: 14, fontWeight: 600, marginBottom: debug ? 8 : 0 }}>
+        {error}
+      </div>
+      {debug && (
+        <>
+          <button onClick={() => setExpanded(!expanded)} style={{
+            background: 'none', border: 'none', color: '#999', fontSize: 12,
+            cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline',
+          }}>{expanded ? 'Hide' : 'Show'} details</button>
+          {expanded && (
+            <pre style={{
+              marginTop: 8, padding: 12, background: '#fff', border: '1px solid #eee',
+              borderRadius: 6, fontSize: 12, lineHeight: 1.5, color: '#555',
+              whiteSpace: 'pre-wrap', wordBreak: 'break-all', overflow: 'auto', maxHeight: 300,
+            }}>{debug}</pre>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 function VersionBadge({ light }: { light?: boolean }) {
   const color = light ? 'rgba(255,255,255,0.35)' : '#bbb';
   return (
@@ -104,12 +134,23 @@ export default function Home() {
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const processFiles = useCallback(async (allFiles: FileMap) => {
-    const fileCount = Object.keys(allFiles).length;
+    const paths = Object.keys(allFiles);
+    const fileCount = paths.length;
+
+    const debug = [
+      `Files read: ${fileCount}`,
+      `JSON files: ${paths.filter(p => p.endsWith('.json')).join(', ') || 'none'}`,
+      `HTML files: ${paths.filter(p => p.endsWith('.html')).join(', ') || 'none'}`,
+      `SCSS files: ${paths.filter(p => p.endsWith('.scss')).join(', ') || 'none'}`,
+    ].join('\n');
+
     if (fileCount === 0) {
       setError('No files found. Make sure you selected a folder (not individual files).');
+      setDebugInfo(debug);
       setLoading(false);
       return;
     }
@@ -117,9 +158,12 @@ export default function Home() {
     const found = discoverFromFiles(allFiles);
     if (found.length === 0) {
       setError(
-        `Read ${fileCount} files but found no newsletters. Expected folders with pe-newsletter-*-en.json and a matching component subfolder.`
+        `Read ${fileCount} files but found no newsletters. Expected pe-newsletter-*-en.json + a matching component subfolder.`
       );
+      setDebugInfo(debug);
       setFiles(null);
+    } else {
+      setDebugInfo(null);
     }
     setNewsletters(found);
     setLoading(false);
@@ -186,16 +230,26 @@ export default function Home() {
     if (!files) return;
     setLoading(true);
     setError(null);
+    setDebugInfo(null);
 
     try {
       const body = renderNewsletter(files, nl, lang);
       if (!body) {
+        const jsonPath = lang === 'fr' ? nl.frJsonPath : nl.enJsonPath;
         setError(`Could not render ${nl.slug} in ${lang.toUpperCase()}`);
+        setDebugInfo([
+          `Slug: ${nl.slug}`,
+          `Language: ${lang}`,
+          `Template: ${nl.templatePath} (${nl.templatePath in files ? 'found' : 'MISSING'})`,
+          `JSON: ${jsonPath} (${jsonPath && jsonPath in files ? 'found' : 'MISSING'})`,
+          `SCSS: ${nl.scssPath} (${nl.scssPath in files ? 'found' : 'MISSING'})`,
+        ].join('\n'));
         setLoading(false);
         return;
       }
 
       let css = '';
+      let scssError = '';
       if (nl.scssPath in files) {
         try {
           const res = await fetch('/api/compile-scss', {
@@ -203,14 +257,30 @@ export default function Home() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ scss: files[nl.scssPath] }),
           });
-          const data = await res.json();
-          css = data.css || '';
-        } catch { /* no component CSS */ }
+          if (!res.ok) {
+            scssError = `SCSS API returned ${res.status}`;
+          } else {
+            const data = await res.json();
+            css = data.css || '';
+          }
+        } catch (e) {
+          scssError = `SCSS compilation failed: ${(e as Error).message}`;
+        }
       }
 
       setPreview({ html: body, css, nl, lang });
+      if (scssError) setDebugInfo(scssError);
     } catch (err) {
+      const jsonPath = lang === 'fr' ? nl.frJsonPath : nl.enJsonPath;
       setError((err as Error).message);
+      setDebugInfo([
+        `Slug: ${nl.slug}`,
+        `Language: ${lang}`,
+        `Template: ${nl.templatePath}`,
+        `JSON: ${jsonPath}`,
+        `SCSS: ${nl.scssPath}`,
+        `All loaded files: ${Object.keys(files).join(', ')}`,
+      ].join('\n'));
     }
     setLoading(false);
   }, [files]);
@@ -342,6 +412,8 @@ export default function Home() {
           </div>
         ))}
 
+        <ErrorPanel error={error} debug={debugInfo} />
+
         {loading && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
             <div style={{ background: '#fff', padding: '24px 32px', borderRadius: 12, fontSize: 16, fontWeight: 600 }}>Rendering...</div>
@@ -406,13 +478,7 @@ export default function Home() {
         <div style={{ marginTop: 24, fontSize: 16, fontWeight: 600, color: '#8b1d41' }}>Reading files...</div>
       )}
 
-      {error && (
-        <div style={{
-          marginTop: 24, padding: '12px 24px', background: '#fff3f3',
-          border: '1px solid #ffcccc', borderRadius: 8, color: '#c0392b',
-          fontSize: 14, maxWidth: 500, textAlign: 'center',
-        }}>{error}</div>
-      )}
+      <ErrorPanel error={error} debug={debugInfo} />
 
       <VersionBadge />
     </div>
