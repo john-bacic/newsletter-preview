@@ -157,13 +157,16 @@ function postProcess(html: string): string {
   return html;
 }
 
-function renderHeader(edition: string): string {
+function renderHeader(edition: string, heroImage: string): string {
+  const heroStyle = heroImage
+    ? `background: linear-gradient(to top, rgba(139,29,65,0.85), rgba(139,29,65,0.4)), url('${heroImage}') center/cover no-repeat; min-height: 220px; display: flex; align-items: flex-end;`
+    : 'background: #8b1d41;';
   return `
   <div class="pe-header">
     <div class="pe-header-container">
       <a href="https://www.cibc.com" target="_blank"><img src="https://braze-images.com/appboy/communication/assets/image_assets/images/67e5524e10463b0067359667/original.png?1743082062" alt="CIBC Logo" class="pe-logo"></a>
     </div>
-    <div class="pe-hero"><div class="pe-hero-content">
+    <div class="pe-hero" style="${heroStyle}"><div class="pe-hero-content">
       <div class="pe-hero-edition">${edition}</div>
       <div class="pe-hero-title">Summit</div>
       <div class="pe-hero-subtitle">by Premium Edge</div>
@@ -283,8 +286,12 @@ export function renderNewsletter(files: FileMap, newsletter: DiscoveredNewslette
   );
   const footerData = footerPath ? safeParseJson(files[footerPath], footerPath) : null;
 
+  const textData = (jsonData as Record<string, unknown>).text as Record<string, unknown> | undefined;
+  const edition = textData?.edition as string || '';
+  const heroImage = textData?.heroImage as string || '';
+
   template = template.replace(/<app-pe-newsletter-header[^>]*>[\s\S]*?<\/app-pe-newsletter-header>/g,
-    () => renderHeader((jsonData as Record<string, unknown>).text ? ((jsonData as Record<string, unknown>).text as Record<string, unknown>).edition as string || '' : ''));
+    () => renderHeader(edition, heroImage));
   template = template.replace(/<app-pe-newsletter-footer[^>]*>[\s\S]*?<\/app-pe-newsletter-footer>/g,
     () => renderFooter(jsonData, footerData));
 
@@ -298,14 +305,25 @@ export function renderNewsletter(files: FileMap, newsletter: DiscoveredNewslette
   return html;
 }
 
-function resolveImagePaths(html: string, files: FileMap): string {
-  return html.replace(/src="([^"]+)"/g, (full, srcPath: string) => {
-    if (srcPath.startsWith('data:') || srcPath.startsWith('http')) return full;
-    const match = Object.keys(files).find((p) => {
-      if (!files[p].startsWith('data:')) return false;
-      return p === srcPath || p.endsWith('/' + srcPath) || p.endsWith(srcPath.replace(/^\.\//, ''));
-    });
-    if (match) return `src="${files[match]}"`;
-    return full;
+function findImageDataUrl(srcPath: string, files: FileMap): string | null {
+  if (srcPath.startsWith('data:') || srcPath.startsWith('http')) return null;
+  const match = Object.keys(files).find((p) => {
+    if (!files[p].startsWith('data:')) return false;
+    return p === srcPath || p.endsWith('/' + srcPath) || p.endsWith(srcPath.replace(/^\.\//, ''));
   });
+  return match ? files[match] : null;
+}
+
+function resolveImagePaths(html: string, files: FileMap): string {
+  // Resolve src="..." attributes
+  html = html.replace(/src="([^"]+)"/g, (full, srcPath: string) => {
+    const dataUrl = findImageDataUrl(srcPath, files);
+    return dataUrl ? `src="${dataUrl}"` : full;
+  });
+  // Resolve url('...') in inline styles
+  html = html.replace(/url\('([^']+)'\)/g, (full, srcPath: string) => {
+    const dataUrl = findImageDataUrl(srcPath, files);
+    return dataUrl ? `url('${dataUrl}')` : full;
+  });
+  return html;
 }
