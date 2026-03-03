@@ -1,0 +1,97 @@
+{
+  "name": "peNewsletterJan26",
+  "lob": "ie",
+  "lang": "en",
+  "error": {},
+  "text": {
+    "edition": "JANUARY EDITION",
+    "heroImage": "assets/images/pe-newsletter/jan-26-newsletter.jpg",
+    "greetingText": "Hi (first name),",
+    "introText": "As we welcome the new year, I'd like to extend my gratitude for your continued business and loyalty. Your trust is what inspires us to deliver an industry-leading client experience.",
+    "secondTextLine": "Markets in 2025 delivered strong returns. But one certainty for 2026 is likely more uncertainty, as global markets deal with AI disruption, tariff policy challenges and monetary policy decisions. To help you navigate 2026, Premium Edge is committed to providing you with timely support and tools to empower your investment decisions.",
+    "thirdTextLine": "We've elevated your Premium Edge experience through exciting features:",
+    "elevatedDescription1": "Gain deeper insights and timely analysis to support your investment decisions with our <strong>enhanced macro and equity research.</strong>",
+    "elevatedDescription2": "Take advantage of robust, intuitive tools that help you identify and act on market opportunities with confidence using our <strong>advanced trading tools.</strong>",
+    "elevatedDescription3": "Connect with industry experts and fellow investors at events throughout the year, and <strong>enjoy exclusive benefits and promotions.</strong>",
+    "closingSubText": "Wishing you a prosperous and successful year ahead!",
+    "signatureName": "Jimmy Ha, CIM",
+    "signatureTitle": "Associate Vice President",
+    "featureArticle": {
+      "title": "Four things for 2026",
+      "bodyParagraphs": [
+        "The economy and stock market have continued to perform strongly since 2022, with many calls for recessions that have stubbornly not arrived. There are still plenty of warning signs for 2026, given how much of the U.S. stock market is tied to the fortunes of AI.",
+        "Yet two of the key economic indicators do not point to a peak in the business cycle. At the same time, the Federal Reserve has started to shift its policy stance, which if taken further could create a melt-up in riskier assets like tech stocks and bitcoin. Find out what's in store for the new year."
+      ],
+      "ctaText": "Read: Four things for 2026",
+      "ctaUrl": "https://www.investorsedge.cibc.com/en/learn/investing/portfolio-strategies/4-key-investor-questions-2026.html"
+    },
+    "chunkyNumbers": {
+      "image": "assets/images/pe-newsletter/jan-26-67.jpg",
+      "items": [
+        {
+          "titleBold": "<strong>$6.7 trillion:</strong>",
+          "descriptionHtml": "That's how much AI-related infrastructure spending is expected to hit by 2030 according to McKinsey"
+        },
+        {
+          "titleBold": "<strong>'6-7':</strong>",
+          "descriptionHtml": "It's also the Gen Alpha slang that's word of the year according to <a href=\"https://www.dictionary.com/browse/67\" target=\"_blank\" rel=\"noopener noreferrer\">Dictionary.com</a>, but probably the biggest head scratcher according to parents! 👐"
+        }
+      ]
+    },
+    "goldForecast": {
+      "icon": "assets/images/pe-newsletter/jan-26-goldbar.png",
+      "title": "How did your gold forecast stack up?",
+      "intro": "In July, we polled Premium Edge clients on where they saw gold finishing this year. With the price of gold over $4,300 by mid-December, the bullish group was right!",
+      "subheading": "Here’s where you thought the price of gold would land in December 2025:",
+      "results": [
+        {
+          "emoji": "🐂",
+          "amount": "$4,000",
+          "percentage": "40% were bullish",
+          "note": "⭐ (Gold stars for you!)"
+        },
+        {
+          "emoji": "🤔",
+          "amount": "$3,500",
+          "percentage": "50% were neutral"
+        },
+        {
+          "emoji": "🐻",
+          "amount": "$3,000",
+          "percentage": "10% were bearish"
+        }
+      ],
+      "conclusion": "But the real surprise? Silver has outshone gold with a year-to-date return of 110%, boosted by rising industrial demand and renewed investor interest.",
+      "ctaPrefix": "Learn more about what's shaping the metals markets in: ",
+      "ctaText": "Precious Metals 101",
+      "ctaUrl": "https://www.investorsedge.cibc.com/en/learn/investing/stocks/precious-metals-101.html"
+    },
+    "lifestyle": {
+      "image": "assets/images/pe-newsletter/jan-26-labubu.jpg",
+      "title": "Labubu mania",
+      "subtitle": "The tiny figurine making big cultural waves",
+      "lead": "Pop culture’s new power player has fangs and fluff",
+      "paragraphs": [
+        "In the collectible toy world, a curious creature called Labubu has been making serious waves—and serious money. If you haven’t heard about it and didn’t find it under the tree this past holiday season, here’s your primer.",
+        "Originally launched by Hong Kong-based brand Pop Mart, Labubus are small, wide-eyed figurines with a goblin-like charm. The craze has exploded so dramatically that rare Labubus are now trading for thousands of dollars on premium resale platforms like StockX—some fetching more than a vintage Rolex.",
+        "But there’s a twist: When you buy one, you don’t know what you’re getting. These blind box toys play on the thrill of the unknown, fusing consumerism with the dopamine hit of chance. It’s a model that echoes the rise of prediction markets, where the value lies as much in the suspense as in the outcome. (Yes, you can find blind boxes in both online shops and brick-and-mortar stores.)",
+        "Labubu may be the most adorable example of a deeper shift: The global rise of Chinese and broader Asian pop culture. For years, cultural influence flowed west to east. But Labubu—and its viral spread through platforms like Xiaohongshu (a Chinese lifestyle app akin to Instagram meets Pinterest)—signals a new direction.",
+        "The evidence is piling up. Fashion designers are drawing inspiration from hanfu (traditional Han Chinese clothing) and Shanghai's streetwear scene. Past Lives—a Korean-American drama directed by Celine Song and nominated for an Oscar in 2024—captivated Western audiences with its quiet emotional power. And the enduring global adoration of Japan's Studio Ghibli anime films shows no signs of fading.",
+        "What makes Labubu different is its grassroots-to-global trajectory. It didn’t come from a massive entertainment franchise or a Western marketing machine. It emerged from a regional aesthetic—and somehow, it resonates everywhere. Labubu may be little, but in a cultural wave rolling east to west, it’s not just riding it—it’s helping set the course."
+      ]
+    },
+    "webinar": {
+      "icon": "assets/images/pe-newsletter/growth-96x96.svg",
+      "label": "WEBINAR",
+      "title": "Canada's 2026 Economic Outlook with Benjamin Tal",
+      "description": "Join economist Benjamin Tal for an in-depth look at Canada's 2026 economic outlook. He'll explore what's ahead for interest rates, inflation, housing, jobs and growth, and how global and domestic forces could shape Canada's markets in the year ahead.",
+      "additionalText": "Gain a clearer view of the trends to watch and what they could mean for investors. Live Q&A included.",
+      "dateLabel": "<strong>Date:</strong>",
+      "date": "January 27, 2026",
+      "timeLabel": "<strong>Time:</strong>",
+      "time": "1:00 to 2:00 pm ET",
+      "ctaText": "Register now",
+      "ctaUrl": "https://cibcvirtual.com/PremiumEdge26webinarseries"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "peNewsletterFooter",
+  "lob": "ie",
+  "lang": "en",
+  "error": {},
+  "text": {
+    "ratingQuestion": "Please rate the helpfulness of this email:",
+    "ratingLabelLow": "Not at all helpful",
+    "ratingLabelHigh": "Very helpful",
+    "sourceNote": "<sup>†</sup>Source: \"Macrotrends - The Premier Research Platform for Long Term Investors,\" effective 2025. <a href=\"https://www.macrotrends.net\" target=\"_blank\" rel=\"noopener noreferrer\">https://www.macrotrends.net</a>",
+    "offerNote1": "<sup>††</sup>The Offer begins November 3, 2025 and ends March 31, 2026",
+    "offerNote2": "Free Trade Offer applies to new eligible account(s) during the Offer Period online or by visiting a CIBC Banking Centre and using promo code EDGE2526.",
+    "freeTradesNote": "One hundred (100) commission-free online trades will be added to your account upon its opening. Newly opened accounts that are of the same type as accounts already held by an existing CIBC Investor's Edge client are not eligible for the Offer. Any unused free trades will expire on March 31, 2027 and can't be transferred to another CIBC Investor's Edge account or used after the expiry date.",
+    "cashBackNote": "The Cash Back Offer applies to eligible transfers from outside CIBC into a new or existing CIBC Investor's Edge account(s). To transfer eligible amounts of cash and/or securities into your account(s), you are eligible to receive a cash back deposit into your account(s). To qualify for the offer, the cumulative value of the Transferred Assets held in each account, minus any withdrawals from the account on or after the Transfer-In Date, must remain above $10,000.00, $50,000.00, $100,000.00 or $2,000,000 as applicable, until the first cash back payment is deposited to the account during the week of July 27, 2026 and the second cash back payment is deposited to the account during the week of May 10, 2027.",
+    "accountTypesNote": "Eligible account types include Tax-Free Savings Account (TFSA), Registered Retirement Savings Plan (RRSP), First Home Savings Account (FHSA), Non-registered account (personal), Non-registered account (non-personal), Registered Retirement Income Fund (RRIF).",
+    "fullDetailsNote": "For full Offer details, review the CIBC Investor's Edge Free Trade and Cash Back Offer. <a href=\"https://www.investorsedge.cibc.com/en/special-offers/start-trading.html\" target=\"_blank\" rel=\"noopener noreferrer\">https://www.investorsedge.cibc.com/en/special-offers/start-trading.html</a>"
+  }
+}

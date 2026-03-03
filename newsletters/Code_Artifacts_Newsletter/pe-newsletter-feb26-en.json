@@ -1,0 +1,183 @@
+{
+  "name": "peNewsletterFeb26",
+  "lob": "ie",
+  "lang": "en",
+  "error": {},
+  "text": {
+    "edition": "FEBRUARY EDITION",
+    "heroImage": "assets/images/pe-newsletter/feb-cover.jpg",
+    "greetingText": "Hi (first name),",
+    "introText": "Welcome to the February edition of Summit, with details on your new access to the expertise of Evercore ISI.",
+    "featureArticle": {
+      "title": "Explore your new access to Evercore ISI research ",
+      "bodyParagraphs": [
+        "Last month, we launched an exclusive new benefit for Premium Edge clients: full access to the research and expertise of Evercore ISI—one of the most respected independent research firms on Wall Street, known for deep analysis and fresh perspective on global markets."
+      ],
+      "firstQuestion" : "Why does this matter?",
+      "firstAnswer" : "Evercore ISI’s team is made up of sector specialists, technical and quant analysts and macro/policy experts—people who aren’t just tracking the news but asking bigger questions and spotting early shifts across a range of sectors.",
+      "secondQuestion" : "Here’s what you can now tap into:",
+      "thirdQuestion" : "How does this help you?",
+      "items": [
+        {
+          "emoji": "☝️",
+          "amount": "Best in class U.S. research",
+          "description": "Get Evercore ISI’s detailed reports, market views and forward-looking commentary right from your account."
+        },
+        {
+          "emoji": "📺",
+          "amount": "Live webinars with Evercore ISI analysts",
+          "description": "Whether you want to dig into a sector trend or get the “big picture” view, you can learn directly from the people behind the research and have the opportunity to ask questions."
+        },
+        {
+          "emoji": "🔮",
+          "amount": "Clear stock calls and top picks",
+          "description": "Evercore ISI analysts aren’t afraid to name names—they highlight stocks they believe have strong potential, sharing their top picks and high-conviction ideas alongside thorough analysis."
+        },
+        {
+          "emoji": "🤓",
+          "amount": "A steady guide in noisy markets",
+          "description": "From bubbles to bargains, Evercore ISI analysts have seen it all. Their independent insight helps you weigh new opportunities and steer clear of the hype—across tech, energy, healthcare and beyond."
+        }
+      ],
+      "howHelpsItems": [
+        {
+          "emoji": "👉",
+          "description": "More confidence and clarity as you navigate complex markets"
+        },
+        {
+          "emoji": "👉",
+          "description": "Direct access to independent, institutional-grade analysis—across sectors and market cycles"
+        },
+        {
+          "emoji": "👉",
+          "description": "Real opportunities to ask your own questions and hear what top analysts are watching"
+        }
+      ],
+      "frequentTraders":"And it’s not just for frequent traders!",
+      "frequentFirstTradersText":"Evercore ISI research is just as valuable if you prefer a long-term approach or simply want to understand the world better. You’ll get the bigger picture—emerging trends in the economy before they hit the headlines, new technologies as they rise, fresh takes on established industries and the kinds of stories that make markets (and the world) more interesting and understandable.",
+      "frequentSecondTradersText":"We encourage you to explore this exclusive resource and make it part of your investment toolkit. Stay tuned for research highlights and event invitations in your inbox—Evercore ISI’s expertise is now at your fingertips, helping you stay ahead in every market.",
+      "exclusive":"Exclusive",
+      "joinEvercore":"Join our Evercore ISI webinar",
+      "date":"<strong>Date:</strong>",
+      "time":"<strong>Time:</strong>",
+      "DateFeb":"February 5, 2026",
+      "TimeFeb":"1:00 to 2:00 pm ET",
+      "registerToday":"Register today"
+    },
+    "chunkyNumbers": {
+      "image": "assets/images/pe-newsletter/jan-26-67.jpg",
+      "items": [
+        {
+          "titleBold": "<strong>$6.7 trillion:</strong>",
+          "descriptionHtml": "That's how much AI-related infrastructure spending is expected to hit by 2030 according to McKinsey"
+        },
+        {
+          "titleBold": "<strong>'6-7':</strong>",
+          "descriptionHtml": "It's also the Gen Alpha slang that's word of the year according to <a href=\"https://www.dictionary.com/browse/67\" target=\"_blank\" rel=\"noopener noreferrer\">Dictionary.com</a>, but probably the biggest head scratcher according to parents! 👐"
+        }
+      ]
+    },
+    "goldForecast": {
+      "icon": "assets/images/pe-newsletter/jan-26-goldbar.png",
+      "title": "How did your gold forecast stack up?",
+      "intro": "In July, we polled Premium Edge clients on where they saw gold finishing this year. With the price of gold over $4,300 by mid-December, the bullish group was right!",
+      "subheading": "Here’s where you thought the price of gold would land in December 2025:",
+      "conclusion": "But the real surprise? Silver has outshone gold with a year-to-date return of 110%, boosted by rising industrial demand and renewed investor interest.",
+      "ctaPrefix": "Learn more about what's shaping the metals markets in: ",
+      "ctaText": "Precious Metals 101",
+      "ctaUrl": "https://www.investorsedge.cibc.com/en/learn/investing/stocks/precious-metals-101.html"
+    },
+    "lifestyle": {
+      "title": "Quantitative easing and tightening",
+      "subtitle": "What they mean for stocks",
+      "lead": "Pop culture’s new power player has fangs and fluff",
+      "paragraphs": [
+        "You get in your sailboat and you’re ready to take off—nice boat, experienced crew and plenty of provisions. But there’s one other thing that matters a lot—the tide. The same is true for investing, except the tide is liquidity—the amount of money and credit available in the financial system. A rising tide lifts most boats, especially faster ones.",
+        "In this article, we explain how central banks add liquidity with quantitative easing (QE) or remove it with quantitative tightening (QT). This is timely, as the U.S. Federal Reserve stopped QT in December 2025 and may pivot to QE in 2026. Last time they did, it was fireworks for tech stocks and bitcoin."
+      ],
+      "ctaText": "Read: Learn about QE and QT"
+    },
+    "webinar": {
+      "icon": "assets/images/pe-newsletter/growth-96x96.svg",
+      "label": "WEBINAR",
+      "title": "Canada's 2026 Economic Outlook with Benjamin Tal",
+      "description": "Join economist Benjamin Tal for an in-depth look at Canada's 2026 economic outlook. He'll explore what's ahead for interest rates, inflation, housing, jobs and growth, and how global and domestic forces could shape Canada's markets in the year ahead.",
+      "additionalText": "Gain a clearer view of the trends to watch and what they could mean for investors. Live Q&A included.",
+      "dateLabel": "<strong>Date:</strong>",
+      "date": "January 27, 2026",
+      "timeLabel": "<strong>Time:</strong>",
+      "time": "1:00 to 2:00 pm ET",
+      "ctaText": "Register now",
+      "ctaUrl": "https://cibcvirtual.com/PremiumEdge26webinarseries"
+    },
+
+    "usInvestors" :{
+      "statNumber":"42%",
+      "statText":"That's the number of U.S. investors who are bullish on the stock market in the next six months.",
+      "sectionDescription":"This is a moderately bullish sentiment, above the long-term average of 38%. Keep in mind that when sentiment indicators get to extreme levels, they can be contrarian.",
+      "sentimentFacts":[
+        {
+          "factEmoji":"🥶",
+          "factText":"The lowest bullish sentiment was 12% in November 1990, right at the start of one of the best decades for the U.S. stock market."
+        },
+        {
+          "factEmoji":"🔥",
+          "factText":"The highest bullish sentiment was 75% in January 2000, just before the dot-com bubble burst."
+        }
+      ],
+      "disclaimer": "Source: American Association of Individual Investors, Sentiment Survey, data for week ending December 31, 2025. Lowest and highest bullish sentiment based on the same survey, which includes data from 1987 to the present.",
+      "ctaUrl":"https://www.aaii.com/sentimentsurvey",
+      "ctaText":"https://www.aaii.com/sentimentsurvey"
+    },
+    "storyArt":{
+      "image": "assets/images/pe-newsletter/storyArt.jpg",
+      "title" :"The story art tells about its time",
+       "bodyParagraphs": [
+        "Art has a way of capturing moments in time, preserving what people valued, how they lived and the stories they believed were worth remembering. Many works act as windows into the past, inviting us to step into earlier cultures and everyday life.",
+        "With the Hudson’s Bay Company’s transition into history, its art collection was auctioned at Heffel Fine Art Auction House’s 30<span class=\"superscript\">th</span> annual sale. The HBC art collection reflects Canada’s evolving identity, holding layers of memory and meaning that remain significant. We were pleased to share this experience at Heffel auction house with our Premium Edge clients.",
+        "A highlight of the Heffel auction was the 1894 painting, Lights of a City Street, by Canadian landscape artist Frederic Marlett Bell-Smith. The painting depicts a rainy evening at Toronto’s Yonge and King corner, with streetlights glowing against wet pavement and pedestrians moving quietly through the streets. Bell-Smith included himself and his son in the composition, offering a personal glimpse into city life over a century ago. Today, the scene feels both familiar and distant, a reminder of a Toronto that continues to change, even as echoes of its past remain.",
+        "Lights of a City Street is one of Bell-Smith’s most celebrated works and has been reproduced in numerous publications on Canadian art, cementing its place in the country’s artistic heritage. The painting was initially estimated at $150,000 but far surpassed expectations, selling for $691,250 and setting a new auction record for Bell-Smith.",
+        "The final price seemed less about dollars; it honored the enduring appeal of the HBC collection and highlighted the powerful role that art plays in helping us safeguard stories, places and moments that matter.",
+        "In passing to new hands, these pieces invite us all to cherish the past, embrace the present and continue building Canada’s cultural legacy."
+      ]
+    },
+
+    "webinars": {
+      "icon": "assets/images/pe-newsletter/growth-96x96.svg",
+      "label": "WEBINAR",
+      "title": "Building smarter portfolios with low-cost ETFs",
+      "description": "Discover how all-in-one ETF portfolios and index ETFs can simplify your approach and serve as powerful core building blocks in your portfolio.",
+      "additionalText": "We’ll break down the essentials of ETF investing, demystify portfolio construction concepts, and provide practical guidance to help you make confident, informed decisions.",
+      "ETFs":"Whether you’re new to ETFs or looking to optimize your holdings, this session will equip you with the knowledge and tools to take your investing to the next level.",
+      "dateLabel": "<strong>Date:</strong>",
+      "date": "February 18, 2026",
+      "timeLabel": "<strong>Time:</strong>",
+      "time": "1:00 to 2:00 pm ET",
+      "ctaText": "Register now",
+      "ctaUrl": "https://cibcvirtual.com/InvestorsEdgeWebinars2026/"
+    },
+    "cash": {
+      "title": "Cash in before the RRSP deadline",
+      "icon": "assets/images/pe-newsletter/accounts-96x96.svg",
+      "paragraphs": [
+        "Have RRSPs elsewhere? Bring your RRSPs or other accounts to us and get rewarded with up to $15,000 cash back.",
+        "Conditions apply<sup>†</sup>"
+      ],
+      "ctaText": "Learn more",
+      "ctaUrl": "https://www.investorsedge.cibc.com/en/special-offers/start-trading.html"
+    }
+  },
+  "footer": {
+    "ratingQuestion": "Please rate the helpfulness of this email:",
+    "ratingLabelLow": "Not at all helpful",
+    "ratingLabelHigh": "Very helpful",
+    "sourceNote": "<sup>†</sup>The Offer begins November 3, 2025 and ends March 31, 2026",
+    "offerNotes": [
+      "Free Trade Offer applies to new eligible account(s) during the Offer Period online or by visiting a CIBC Banking Centre and using promo code EDGE2526.",
+      "One hundred (100) commission-free online trades will be added to your account upon its opening. Newly opened accounts that are of the same type as accounts already held by an existing CIBC Investor’s Edge client are not eligible for the Offer. Any unused free trades will expire on March 31, 2027 and can’t be transferred to another CIBC Investor’s Edge account or used after the expiry date.",
+      "The Cash Back Offer applies to eligible transfers from outside CIBC into a new or existing CIBC Investor’s Edge account(s). If you transfer an eligible amount of cash and/or securities into your account(s), you are eligible to receive a cash back deposit into your account(s). To qualify for the offer, the cumulative value of the Transferred Assets held in each account, minus any withdrawals from the account on or after the Transfer-In Date, must remain above $10,000, $25,000, $50,000, $100,000, $250,000, $500,000, $1,000,000 or $2,000,000 as applicable, until the first cash back payment is deposited to the account during the week of July 27, 2026 and the second cash back payment is deposited to the account during the week of May 10, 2027.",
+      "Eligible account types include Tax-Free Savings Account (TFSA), Registered Retirement Savings Plan (RRSP), First Home Savings Account (FHSA), Non-registered account (personal), Non-registered account (non-personal), Registered Retirement Income Fund (RRIF).",
+      "For full Offer details, review the CIBC Investor’s Edge Free Trade and Cash Back Offer. <a href=\"https://www.investorsedge.cibc.com/en/special-offers/start-trading.html\" target=\"_blank\" rel=\"noopener noreferrer\">https://www.investorsedge.cibc.com/en/special-offers/start-trading.html</a>"
+    ]
+  }
+}

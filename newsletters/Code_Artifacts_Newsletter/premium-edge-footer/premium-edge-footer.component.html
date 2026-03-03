@@ -1,0 +1,23 @@
+<div class="footerDiv" [ngClass]="theme" (click)="openSideDrawer()">
+    <div class="footerHeader">
+        <div class="footerTitle">
+            {{ content?.text?.footer?.title }}
+        </div>
+        <div class="footerSubtitle">
+            {{ content?.text?.footer?.subtitle }}
+        </div>
+    </div>
+    <button class="learnMoreButton" >
+        <svg class="diamond-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 3C6.3481 3 6.20445 3.06904 6.10956 3.18765L2.10957 8.18765C1.96407 8.36951 1.96342 8.62774 2.10798 8.81035L11.608 20.8103C11.7028 20.9301 11.8472 21 12 21C12.1528 21 12.2972 20.9301 12.392 20.8103L21.892 8.81035C22.0366 8.62774 22.0359 8.36951 21.8904 8.18765L17.8904 3.18765C17.7955 3.06904 17.6519 3 17.5 3H6.5ZM3.54031 8L6.74031 4H8.89009L8.09009 8H3.54031ZM9.1099 8L9.90989 4H14.0901L14.8901 8H9.1099ZM14.8333 9H9.16666L12 18.7143L14.8333 9ZM13.1966 18.1829L15.875 9H20.4664L13.1966 18.1829ZM15.9099 8L15.1099 4H17.2597L20.4597 8H15.9099ZM3.53355 9H8.12499L10.8033 18.1829L3.53355 9Z" />
+        </svg>
+        <span class="btnTxt">{{ content?.text?.footer?.buttonText }}</span>
+        <span class="sr-only"> {{content?.text?.openInExpandedSR}}</span>
+    </button>
+</div>
+
+<!-- Mobile-only benefits sidebar -->
+<app-premium-edge-benefits-sidebar 
+    *ngIf="!commonService.isDesktop()" 
+    [theme]="theme">
+</app-premium-edge-benefits-sidebar>

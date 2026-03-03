@@ -1,0 +1,97 @@
+{
+  "name": "peNewsletterJan26",
+  "lob": "ie",
+  "lang": "fr",
+  "error": {},
+  "text": {
+    "edition": "ÉDITION DE JANVIER",
+    "heroImage": "assets/images/pe-newsletter/jan-26-newsletter.jpg",
+    "greetingText": "Bonjour (first name),",
+    "introText": "À l'aube de cette nouvelle année, je tiens à vous remercier pour votre fidélité et votre confiance. C'est grâce à vous que nous sommes en mesure d'offrir une expérience client hors pair.",
+    "secondTextLine": "Les marchés ont enregistré de solides performances en 2025. Mais une chose est sûre pour 2026 : l’incertitude devrait s’accentuer, les marchés mondiaux étant confrontés aux bouleversements liés à l’IA, aux défis liés à la politique tarifaire et aux décisions de politique monétaire. Pour vous aider à naviguer en 2026, Pro-Investisseurs Plus s’engage à vous fournir un soutien et des outils opportuns pour vous permettre de prendre vos décisions d’investissement en toute confiance.",
+    "thirdTextLine": "Nous avons amélioré votre expérience avec Pro-Investisseurs Plus grâce à des fonctionnalités intéressantes :",
+    "elevatedDescription1": "Profitez d'une perspective plus approfondie et d'analyses opportunes pour étayer vos décisions d'investissement grâce à nos <strong>recherches macroéconomiques et boursières améliorées.</strong>",
+    "elevatedDescription2": "Tirez parti d'outils robustes et intuitifs qui vous aident à déterminer les occasions d'affaires et à agir en toute confiance grâce à nos <strong>outils d'opérations avancés.</strong>",
+    "elevatedDescription3": "Rencontrez des experts du secteur et d'autres investisseurs lors d'événements organisés tout au long de l'année, et <strong>profitez d'avantages et de promotions exclusifs.</strong>",
+    "closingSubText": "Nous vous souhaitons une année prospère et couronnée de succès!",
+    "signatureName": "Jimmy Ha, CIM",
+    "signatureTitle": "Vice-président associé",
+    "featureArticle": {
+      "title": "Quatre éléments pour 2026",
+      "bodyParagraphs": [
+        "L'économie et le marché boursier continuent d'afficher de solides rendements depuis 2022, alors que les nombreuses prévisions de récession ne se sont toujours pas concrétisées. Il existe encore de nombreux signes avant-coureurs pour 2026, étant donné que le marché boursier américain est largement lié à la fortune de l'IA.",
+        "Pourtant, deux des principaux indicateurs économiques ne laissent pas présager un pic dans le cycle économique. Dans le même temps, la Réserve fédérale a commencé à modifier sa politique, ce qui, si cela se poursuit, pourrait entraîner une flambée des actifs plus risqués tels que les actions technologiques et le bitcoin. Découvrez ce que vous réserve la nouvelle année."
+      ],
+      "ctaText": "Lisez : Quatre éléments pour 2026",
+      "ctaUrl": "https://www.investorsedge.cibc.com/fr/learn/investing/portfolio-strategies/4-key-investor-questions-2026.html"
+    },
+    "chunkyNumbers": {
+      "image": "assets/images/pe-newsletter/jan-26-67.jpg",
+      "items": [
+        {
+          "titleBold": "<strong>6,7 billions de dollars :</strong>",
+          "descriptionHtml": "C'est le montant des dépenses d'infrastructure liées à l'IA qui devrait être atteint d'ici 2030 selon McKinsey."
+        },
+        {
+          "titleBold": "<strong>« 6-7 » :</strong>",
+          "descriptionHtml": "C'est aussi l'argot de la génération Alpha qui a été élu mot de l'année par <a href=\"https://www.dictionary.com/browse/67\" target=\"_blank\" rel=\"noopener noreferrer\">Dictionary.com</a>, mais qui est probablement le plus grand casse-tête pour les parents! 👐 <em>(en anglaise seulement)</em>"
+        }
+      ]
+    },
+    "goldForecast": {
+      "icon": "assets/images/pe-newsletter/jan-26-goldbar.png",
+      "title": "Quels ont été vos pronostics concernant l’or?",
+      "intro": "En juillet, nous avons interrogé les clients Pro-Investisseurs Plus pour savoir où ils voyaient l’or finir cette année. Avec un prix de l’or supérieur à 4 300 dollars à la mi-décembre, le groupe optimiste avait vu juste!",
+      "subheading": "Voici où vous pensiez que le prix de l’or se situerait en décembre 2025 :",
+      "results": [
+        {
+          "emoji": "🐂",
+          "amount": "4 000 $",
+          "percentage": "40 % étaient optimistes",
+          "note": "⭐ (Vous méritez des étoiles en or!)"
+        },
+        {
+          "emoji": "🤔",
+          "amount": "3 500 $",
+          "percentage": "50 % étaient neutres"
+        },
+        {
+          "emoji": "🐻",
+          "amount": "3 000 $",
+          "percentage": "10 % étaient pessimistes"
+        }
+      ],
+      "conclusion": "Mais la vraie surprise? L’argent a surpassé l’or avec un rendement de 110 % depuis le début de l’année, stimulé par la hausse de la demande industrielle et le regain d’intérêt des investisseurs.",
+      "ctaPrefix": "Pour en savoir davantage sur les facteurs qui influencent les marchés des métaux, consultez: ",
+      "ctaText": "Métaux précieux 101",
+      "ctaUrl": "https://www.investorsedge.cibc.com/fr/learn/investing/stocks/precious-metals-101.html"
+    },
+    "lifestyle": {
+      "image": "assets/images/pe-newsletter/jan-26-labubu.jpg",
+      "title": "La folie Labubu",
+      "subtitle": "La petite figurine qui fait des vagues dans la culture",
+      "lead": "Le nouveau pouvoir de la culture pop a des crocs et aussi du poil.",
+      "paragraphs": [
+        "Dans le monde des jouets de collection, une curieuse créature appelée Labubu fait beaucoup de bruit et rapporte beaucoup d'argent. Si vous n'en avez pas entendu parler et que vous ne l'avez pas trouvée sous le sapin pendant les fêtes de fin d'année, voici quelques informations pour vous mettre au courant.",
+        "Lancés à l'origine par la marque hongkongaise Pop Mart, les Labubus sont de petites figurines aux grands yeux qui ont le charme des gobelins. L'engouement est tel que les Labubus rares font l'objet d'opérations à des milliers de dollars sur des plateformes de revente haut de gamme comme StockX, certains atteignant des prix supérieurs à ceux d'une Rolex d'époque.",
+        "Mais il y a un hic : lorsque vous en achetez un, vous ne savez pas ce que vous allez obtenir. Ces jouets vendus dans des boîtes opaques jouent sur le frisson de l’inconnu, fusionnant le consumérisme avec la dopamine procurée par le hasard. C’est un modèle qui fait écho à l’essor des marchés prédictifs, où la valeur réside autant dans le suspense que dans le résultat. (Oui, vous pouvez trouver des boîtes opaques dans les boutiques en ligne et dans les magasins physiques).",
+        "Labubu est peut-être l’exemple le plus adorable d’un changement plus profond : l’essor mondial de la culture pop chinoise et asiatique en général. Pendant des années, l’influence culturelle s’est déplacée d’ouest en est. Mais Labubu, et sa diffusion virale sur des plateformes telles que Xiaohongshu (une application chinoise de style de vie qui arrime Instagram et Pinterest), annonce une nouvelle direction.",
+        "Les éléments de preuve s’accumulent. Les créateurs de mode s’inspirent du hanfu (vêtement traditionnel chinois han) et de la scène de mode urbaine de Shanghai. Past Lives, un drame coréen-américain réalisé par Celine Song et mis en nomination aux Oscars en 2024, a captivé le public occidental par sa puissance émotionnelle discrète. Et l’engouement mondial pour les films d’animation du Studio Ghibli japonais ne montre aucun signe de faiblesse.",
+        "Ce qui distingue Labubu, c'est son parcours, qui va de la base au sommet. Il n'est pas issu d'une franchise de divertissement massive ou d'une machine marketing occidentale. Il est né d'une esthétique régionale et, d'une manière ou d'une autre, il trouve un écho partout. Labubu est peut-être petit, mais dans une vague culturelle qui déferle d'est en ouest, il ne se contente pas de la suivre, il contribue à tracer la voie."
+      ]
+    },
+    "webinar": {
+      "icon": "assets/images/pe-newsletter/growth-96x96.svg",
+      "label": "WEBINAIRE",
+      "title": "Perspectives économiques pour le Canada en 2026 présentées par Benjamin Tal",
+      "description": "Joignez-vous à l'économiste Benjamin Tal pour un examen approfondi des perspectives économiques du Canada pour 2026. Il explorera l'avenir des taux d'intérêt, de l'inflation, du logement, de l'emploi et de la croissance, et examinera comment les forces mondiales et nationales pourraient façonner les marchés canadiens au cours de l'année à venir.",
+      "additionalText": "Obtenez une vision plus claire des tendances à surveiller et de ce qu'elles pourraient signifier pour les investisseurs. Une séance de questions-réponses en direct est prévue.",
+      "dateLabel": "<strong>Date :</strong>",
+      "date": "27 janvier 2026",
+      "timeLabel": "<strong>Heure :</strong>",
+      "time": "de 13 h à 14 h (HE)",
+      "ctaText": "Inscrivez-vous dès maintenant",
+      "ctaUrl": "https://cibcvirtual.com/PremiumEdge26webinarseries"
+    }
+  }
+}
