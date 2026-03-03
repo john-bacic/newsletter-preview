@@ -106,6 +106,25 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  const processFiles = useCallback(async (allFiles: FileMap) => {
+    const fileCount = Object.keys(allFiles).length;
+    if (fileCount === 0) {
+      setError('No files found. Make sure you selected a folder (not individual files).');
+      setLoading(false);
+      return;
+    }
+    setFiles(allFiles);
+    const found = discoverFromFiles(allFiles);
+    if (found.length === 0) {
+      setError(
+        `Read ${fileCount} files but found no newsletters. Expected folders with pe-newsletter-*-en.json and a matching component subfolder.`
+      );
+      setFiles(null);
+    }
+    setNewsletters(found);
+    setLoading(false);
+  }, []);
+
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
     setDragging(false);
@@ -116,7 +135,6 @@ export default function Home() {
     try {
       const items = e.dataTransfer.items;
       let allFiles: FileMap = {};
-
       for (let i = 0; i < items.length; i++) {
         const entry = items[i].webkitGetAsEntry?.();
         if (entry?.isDirectory) {
@@ -124,30 +142,51 @@ export default function Home() {
           allFiles = { ...allFiles, ...dirFiles };
         }
       }
-
-      const fileCount = Object.keys(allFiles).length;
-      if (fileCount === 0) {
-        setError('No files found. Make sure you dropped a folder (not individual files).');
-        setLoading(false);
-        return;
-      }
-
-      setFiles(allFiles);
-      const found = discoverFromFiles(allFiles);
-
-      if (found.length === 0) {
-        setError(
-          `Read ${fileCount} files but found no newsletters. Expected folders with pe-newsletter-*-en.json and a matching component subfolder.`
-        );
-        setFiles(null);
-      }
-
-      setNewsletters(found);
+      await processFiles(allFiles);
     } catch (err) {
       setError(`Error reading files: ${(err as Error).message}`);
+      setLoading(false);
     }
-    setLoading(false);
-  }, []);
+  }, [processFiles]);
+
+  const handleBrowse = useCallback(async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = window as any;
+      if (!w.showDirectoryPicker) {
+        setError('Folder picker not supported in this browser. Use drag & drop instead, or try Chrome/Edge.');
+        return;
+      }
+      const dirHandle = await w.showDirectoryPicker();
+      setLoading(true);
+      setPreview(null);
+      setError(null);
+
+      const allFiles: FileMap = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async function walk(handle: any, prefix: string) {
+        for await (const entry of handle.values()) {
+          const name: string = entry.name;
+          const fullPath = prefix ? `${prefix}/${name}` : name;
+          if (entry.kind === 'file') {
+            if (/\.(json|html|scss)$/i.test(name)) {
+              const file = await entry.getFile();
+              allFiles[fullPath] = await file.text();
+            }
+          } else if (entry.kind === 'directory') {
+            await walk(entry, fullPath);
+          }
+        }
+      }
+      await walk(dirHandle, '');
+      await processFiles(allFiles);
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        setError(`Error: ${(err as Error).message}`);
+      }
+      setLoading(false);
+    }
+  }, [processFiles]);
 
   const openPreview = useCallback(async (nl: DiscoveredNewsletter, lang: string) => {
     if (!files) return;
@@ -334,14 +373,21 @@ export default function Home() {
           Newsletter Preview
         </h1>
         <p style={{ fontSize: 16, color: '#606366', lineHeight: 1.6 }}>
-          Drag &amp; drop a newsletter folder here to preview it.
+          Drag &amp; drop a newsletter folder here, or browse to select one.
         </p>
-        <p style={{ fontSize: 13, color: '#999', marginTop: 16 }}>
-          Drop a single newsletter folder or a parent folder containing multiple newsletters.
+        <button onClick={handleBrowse} style={{
+          marginTop: 20, padding: '12px 28px', borderRadius: 6, fontSize: 15, fontWeight: 600,
+          background: '#8b1d41', color: '#fff', border: 'none', cursor: 'pointer',
+          fontFamily: 'inherit', transition: 'background 0.15s',
+        }}>
+          Browse folder…
+        </button>
+        <p style={{ fontSize: 13, color: '#999', marginTop: 20 }}>
+          Single newsletter folder or a parent containing multiple newsletters.
           <br />
-          Expects <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>pe-newsletter-*-en.json</code> + a component subfolder with <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.html</code> / <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.scss</code>
+          Expects <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>pe-newsletter-*-en.json</code> + component subfolder with <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.html</code> / <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.scss</code>
         </p>
-        <p style={{ fontSize: 12, color: '#bbb', marginTop: 24 }}>
+        <p style={{ fontSize: 12, color: '#bbb', marginTop: 20 }}>
           Files stay in your browser. Only SCSS is sent to the server for compilation.
         </p>
       </div>
