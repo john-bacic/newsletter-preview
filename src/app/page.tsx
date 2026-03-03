@@ -8,6 +8,23 @@ import {
   renderNewsletter,
 } from '@/lib/template-engine';
 
+const GIT_SHA = process.env.NEXT_PUBLIC_GIT_SHA || 'dev';
+const GIT_MSG = process.env.NEXT_PUBLIC_GIT_COMMIT_MSG || '';
+
+function VersionBadge({ light }: { light?: boolean }) {
+  const color = light ? 'rgba(255,255,255,0.35)' : '#bbb';
+  return (
+    <div style={{
+      position: 'fixed', bottom: 8, right: 12, fontSize: 11,
+      color, fontFamily: 'monospace', zIndex: 200, pointerEvents: 'none',
+      textAlign: 'right', lineHeight: 1.4,
+    }}>
+      <span>{GIT_SHA}</span>
+      {GIT_MSG && <span style={{ marginLeft: 6, fontFamily: "'Open Sans',sans-serif", fontStyle: 'italic' }}>{GIT_MSG}</span>}
+    </div>
+  );
+}
+
 const SHELL_CSS = `
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Open Sans',Arial,sans-serif; background:#e8e8e8; color:#383b3e; }
@@ -179,6 +196,7 @@ export default function Home() {
   if (preview) {
     return (
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <VersionBadge light />
         <div style={{
           background: '#1a1a2e', color: '#fff', padding: '10px 20px',
           display: 'flex', alignItems: 'center', gap: 16, fontSize: 14, flexShrink: 0,
@@ -228,6 +246,7 @@ export default function Home() {
 
     return (
       <div style={{ minHeight: '100vh', background: '#f2f3f2' }}>
+        <VersionBadge />
         <header style={{ background: '#1a1a2e', color: '#fff', padding: '32px 40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div>
@@ -300,7 +319,7 @@ export default function Home() {
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
       style={{
-        minHeight: '100vh', display: 'flex', flexDirection: 'column',
+        minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative',
         alignItems: 'center', justifyContent: 'center',
         background: dragging ? '#e8e0f0' : '#f2f3f2', transition: 'background 0.2s',
       }}
@@ -338,6 +357,8 @@ export default function Home() {
           fontSize: 14, maxWidth: 500, textAlign: 'center',
         }}>{error}</div>
       )}
+
+      <VersionBadge />
     </div>
   );
 }
