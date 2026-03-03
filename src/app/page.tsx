@@ -149,43 +149,37 @@ export default function Home() {
     }
   }, [processFiles]);
 
-  const handleBrowse = useCallback(async () => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const w = window as any;
-      if (!w.showDirectoryPicker) {
-        setError('Folder picker not supported in this browser. Use drag & drop instead, or try Chrome/Edge.');
-        return;
-      }
-      const dirHandle = await w.showDirectoryPicker();
-      setLoading(true);
-      setPreview(null);
-      setError(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleBrowse = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleFileInput = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files;
+    if (!fileList || fileList.length === 0) return;
+    setLoading(true);
+    setPreview(null);
+    setError(null);
+
+    try {
       const allFiles: FileMap = {};
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async function walk(handle: any, prefix: string) {
-        for await (const entry of handle.values()) {
-          const name: string = entry.name;
-          const fullPath = prefix ? `${prefix}/${name}` : name;
-          if (entry.kind === 'file') {
-            if (/\.(json|html|scss)$/i.test(name)) {
-              const file = await entry.getFile();
-              allFiles[fullPath] = await file.text();
-            }
-          } else if (entry.kind === 'directory') {
-            await walk(entry, fullPath);
-          }
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        const relativePath = file.webkitRelativePath || file.name;
+        const parts = relativePath.split('/');
+        const pathWithoutRoot = parts.slice(1).join('/');
+        if (/\.(json|html|scss)$/i.test(file.name)) {
+          allFiles[pathWithoutRoot] = await file.text();
         }
       }
-      await walk(dirHandle, '');
       await processFiles(allFiles);
     } catch (err) {
-      if ((err as Error).name !== 'AbortError') {
-        setError(`Error: ${(err as Error).message}`);
-      }
+      setError(`Error reading files: ${(err as Error).message}`);
       setLoading(false);
     }
+
+    if (fileInputRef.current) fileInputRef.current.value = '';
   }, [processFiles]);
 
   const openPreview = useCallback(async (nl: DiscoveredNewsletter, lang: string) => {
@@ -368,6 +362,16 @@ export default function Home() {
         borderRadius: 24, padding: '80px 60px', textAlign: 'center',
         maxWidth: 600, transition: 'border-color 0.2s',
       }}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          // @ts-expect-error webkitdirectory is non-standard but works in all major browsers
+          webkitdirectory=""
+          directory=""
+          multiple
+          onChange={handleFileInput}
+          style={{ display: 'none' }}
+        />
         <div style={{ fontSize: 48, marginBottom: 16 }}>📂</div>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: '#383b3e', marginBottom: 8 }}>
           Newsletter Preview
