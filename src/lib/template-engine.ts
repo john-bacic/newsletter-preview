@@ -203,39 +203,76 @@ export interface FileMap {
 }
 
 export interface DiscoveredNewsletter {
+  id: string;
   slug: string;
+  folder: string;
   hasEn: boolean;
   hasFr: boolean;
   templatePath: string;
   scssPath: string;
+  enJsonPath: string;
+  frJsonPath: string | null;
+  footerPattern: string;
+}
+
+function joinPath(...parts: string[]): string {
+  return parts.filter(Boolean).join('/');
 }
 
 export function discoverFromFiles(files: FileMap): DiscoveredNewsletter[] {
   const results: DiscoveredNewsletter[] = [];
   const paths = Object.keys(files);
-  const enJsons = paths.filter(p => /pe-newsletter-\w+-en\.json$/.test(p) && !p.includes('header') && !p.includes('footer'));
+
+  const enJsons = paths.filter(
+    (p) => /pe-newsletter-\w+-en\.json$/.test(p) && !p.includes('header') && !p.includes('footer')
+  );
+
   for (const jsonPath of enJsons) {
-    const dir = jsonPath.substring(0, jsonPath.lastIndexOf('/'));
-    const filename = jsonPath.substring(jsonPath.lastIndexOf('/') + 1);
+    const lastSlash = jsonPath.lastIndexOf('/');
+    const dir = lastSlash >= 0 ? jsonPath.substring(0, lastSlash) : '';
+    const filename = lastSlash >= 0 ? jsonPath.substring(lastSlash + 1) : jsonPath;
     const slug = filename.replace('-en.json', '');
-    const templatePath = `${dir}/${slug}/${slug}.component.html`;
-    const scssPath = `${dir}/${slug}/${slug}.component.scss`;
+
+    const templatePath = joinPath(dir, slug, `${slug}.component.html`);
+    const scssPath = joinPath(dir, slug, `${slug}.component.scss`);
+
     if (!(templatePath in files)) continue;
-    const frPath = jsonPath.replace('-en.json', '-fr.json');
-    results.push({ slug, hasEn: true, hasFr: frPath in files, templatePath, scssPath });
+
+    const frJsonPath = jsonPath.replace('-en.json', '-fr.json');
+    const hasFr = frJsonPath in files;
+
+    const folderLabel = dir || 'Root';
+
+    results.push({
+      id: `${dir}/${slug}`,
+      slug,
+      folder: folderLabel,
+      hasEn: true,
+      hasFr,
+      templatePath,
+      scssPath,
+      enJsonPath: jsonPath,
+      frJsonPath: hasFr ? frJsonPath : null,
+      footerPattern: dir,
+    });
   }
+
   return results;
 }
 
 export function renderNewsletter(files: FileMap, newsletter: DiscoveredNewsletter, lang: string): string | null {
-  const dir = newsletter.templatePath.substring(0, newsletter.templatePath.indexOf(`/${newsletter.slug}/`));
-  const jsonPath = `${dir}/${newsletter.slug}-${lang}.json`;
+  const jsonPath = lang === 'fr' && newsletter.frJsonPath ? newsletter.frJsonPath : newsletter.enJsonPath;
+  if (lang === 'fr' && !newsletter.frJsonPath) return null;
   if (!(jsonPath in files)) return null;
 
   const jsonData = JSON.parse(files[jsonPath]);
   let template = files[newsletter.templatePath];
 
-  const footerPath = Object.keys(files).find(p => p.includes(`pe-newsletter-footer-${lang}.json`) && p.startsWith(dir));
+  const footerPath = Object.keys(files).find(
+    (p) =>
+      p.endsWith(`pe-newsletter-footer-${lang}.json`) &&
+      (newsletter.footerPattern === '' || p.startsWith(newsletter.footerPattern))
+  );
   const footerData = footerPath ? JSON.parse(files[footerPath]) : null;
 
   template = template.replace(/<app-pe-newsletter-header[^>]*>[\s\S]*?<\/app-pe-newsletter-header>/g,

@@ -40,34 +40,39 @@ sup { vertical-align:super; font-size:.75em; line-height:0; }
 @media(max-width:640px){.pe-hero{padding:20px}.pe-hero-title{font-size:28px}.pe-footer{padding:24px 20px 32px}}
 `;
 
+async function readAllEntries(dirEntry: FileSystemDirectoryEntry): Promise<FileSystemEntry[]> {
+  const reader = dirEntry.createReader();
+  const all: FileSystemEntry[] = [];
+  let batch: FileSystemEntry[];
+  do {
+    batch = await new Promise<FileSystemEntry[]>((res, rej) =>
+      reader.readEntries(res as (entries: FileSystemEntry[]) => void, rej)
+    );
+    all.push(...batch);
+  } while (batch.length > 0);
+  return all;
+}
+
 async function readDirectory(entry: FileSystemDirectoryEntry): Promise<FileMap> {
   const files: FileMap = {};
   async function walk(dirEntry: FileSystemDirectoryEntry, prefix: string) {
-    const reader = dirEntry.createReader();
-    let entries: FileSystemEntry[] = [];
-    let batch: FileSystemEntry[];
-    do {
-      batch = await new Promise((res, rej) => reader.readEntries(res as (entries: FileSystemEntry[]) => void, rej));
-      entries = entries.concat(batch);
-    } while (batch.length > 0);
-
-    for (const entry of entries) {
-      const fullPath = prefix ? `${prefix}/${entry.name}` : entry.name;
-      if (entry.isFile) {
-        const fileEntry = entry as FileSystemFileEntry;
-        if (/\.(json|html|scss|ts)$/i.test(entry.name)) {
+    const entries = await readAllEntries(dirEntry);
+    for (const e of entries) {
+      const fullPath = prefix ? `${prefix}/${e.name}` : e.name;
+      if (e.isFile) {
+        if (/\.(json|html|scss)$/i.test(e.name)) {
           const text = await new Promise<string>((res, rej) => {
-            fileEntry.file((file) => {
-              const reader = new FileReader();
-              reader.onload = () => res(reader.result as string);
-              reader.onerror = rej;
-              reader.readAsText(file);
+            (e as FileSystemFileEntry).file((file) => {
+              const r = new FileReader();
+              r.onload = () => res(r.result as string);
+              r.onerror = rej;
+              r.readAsText(file);
             }, rej);
           });
           files[fullPath] = text;
         }
-      } else if (entry.isDirectory) {
-        await walk(entry as FileSystemDirectoryEntry, fullPath);
+      } else if (e.isDirectory) {
+        await walk(e as FileSystemDirectoryEntry, fullPath);
       }
     }
   }
@@ -78,9 +83,10 @@ async function readDirectory(entry: FileSystemDirectoryEntry): Promise<FileMap> 
 export default function Home() {
   const [files, setFiles] = useState<FileMap | null>(null);
   const [newsletters, setNewsletters] = useState<DiscoveredNewsletter[]>([]);
-  const [preview, setPreview] = useState<{ html: string; css: string; slug: string; lang: string } | null>(null);
+  const [preview, setPreview] = useState<{ html: string; css: string; nl: DiscoveredNewsletter; lang: string } | null>(null);
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleDrop = useCallback(async (e: React.DragEvent) => {
@@ -88,29 +94,55 @@ export default function Home() {
     setDragging(false);
     setLoading(true);
     setPreview(null);
+    setError(null);
 
-    const items = e.dataTransfer.items;
-    let allFiles: FileMap = {};
+    try {
+      const items = e.dataTransfer.items;
+      let allFiles: FileMap = {};
 
-    for (let i = 0; i < items.length; i++) {
-      const entry = items[i].webkitGetAsEntry?.();
-      if (entry?.isDirectory) {
-        const dirFiles = await readDirectory(entry as FileSystemDirectoryEntry);
-        allFiles = { ...allFiles, ...dirFiles };
+      for (let i = 0; i < items.length; i++) {
+        const entry = items[i].webkitGetAsEntry?.();
+        if (entry?.isDirectory) {
+          const dirFiles = await readDirectory(entry as FileSystemDirectoryEntry);
+          allFiles = { ...allFiles, ...dirFiles };
+        }
       }
-    }
 
-    setFiles(allFiles);
-    const found = discoverFromFiles(allFiles);
-    setNewsletters(found);
+      const fileCount = Object.keys(allFiles).length;
+      if (fileCount === 0) {
+        setError('No files found. Make sure you dropped a folder (not individual files).');
+        setLoading(false);
+        return;
+      }
+
+      setFiles(allFiles);
+      const found = discoverFromFiles(allFiles);
+
+      if (found.length === 0) {
+        setError(
+          `Read ${fileCount} files but found no newsletters. Expected folders with pe-newsletter-*-en.json and a matching component subfolder.`
+        );
+        setFiles(null);
+      }
+
+      setNewsletters(found);
+    } catch (err) {
+      setError(`Error reading files: ${(err as Error).message}`);
+    }
     setLoading(false);
   }, []);
 
   const openPreview = useCallback(async (nl: DiscoveredNewsletter, lang: string) => {
     if (!files) return;
     setLoading(true);
+    setError(null);
+
     const body = renderNewsletter(files, nl, lang);
-    if (!body) { setLoading(false); return; }
+    if (!body) {
+      setError(`Could not render ${nl.slug} in ${lang.toUpperCase()}`);
+      setLoading(false);
+      return;
+    }
 
     let css = '';
     if (nl.scssPath in files) {
@@ -122,25 +154,14 @@ export default function Home() {
         });
         const data = await res.json();
         css = data.css || '';
-      } catch { /* fallback: no component CSS */ }
+      } catch { /* no component CSS */ }
     }
 
-    setPreview({ html: body, css, slug: nl.slug, lang });
+    setPreview({ html: body, css, nl, lang });
     setLoading(false);
   }, [files]);
 
-  const reset = useCallback(() => {
-    setPreview(null);
-  }, []);
-
-  const fullReset = useCallback(() => {
-    setFiles(null);
-    setNewsletters([]);
-    setPreview(null);
-  }, []);
-
-  // Write preview into iframe
-  const iframeLoaded = useCallback(() => {
+  const writeIframe = useCallback(() => {
     if (!iframeRef.current || !preview) return;
     const doc = iframeRef.current.contentDocument;
     if (!doc) return;
@@ -156,40 +177,40 @@ export default function Home() {
 
   // ─── PREVIEW VIEW ───
   if (preview) {
-    const nl = newsletters.find(n => n.slug === preview.slug);
     return (
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <div style={{
           background: '#1a1a2e', color: '#fff', padding: '10px 20px',
           display: 'flex', alignItems: 'center', gap: 16, fontSize: 14, flexShrink: 0,
         }}>
-          <button onClick={reset} style={{
+          <button onClick={() => setPreview(null)} style={{
             background: 'none', border: 'none', color: '#fff', cursor: 'pointer',
             opacity: 0.8, fontWeight: 500, fontSize: 13, fontFamily: 'inherit',
           }}>← Back</button>
-          <span style={{ fontWeight: 700 }}>{preview.slug}</span>
+          <span style={{ fontWeight: 700 }}>{preview.nl.slug}</span>
+          <span style={{ fontSize: 11, opacity: 0.5 }}>{preview.nl.folder}</span>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-            {nl?.hasEn && (
-              <button onClick={() => openPreview(nl, 'en')} style={{
+            {preview.nl.hasEn && (
+              <button onClick={() => openPreview(preview.nl, 'en')} style={{
                 padding: '4px 12px', borderRadius: 4, fontSize: 12, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'inherit',
                 background: preview.lang === 'en' ? '#8b1d41' : 'transparent',
-                color: '#fff', border: '1px solid ' + (preview.lang === 'en' ? '#8b1d41' : 'rgba(255,255,255,0.3)'),
+                color: '#fff', border: `1px solid ${preview.lang === 'en' ? '#8b1d41' : 'rgba(255,255,255,0.3)'}`,
               }}>EN</button>
             )}
-            {nl?.hasFr && (
-              <button onClick={() => openPreview(nl, 'fr')} style={{
+            {preview.nl.hasFr && (
+              <button onClick={() => openPreview(preview.nl, 'fr')} style={{
                 padding: '4px 12px', borderRadius: 4, fontSize: 12, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'inherit',
                 background: preview.lang === 'fr' ? '#8b1d41' : 'transparent',
-                color: '#fff', border: '1px solid ' + (preview.lang === 'fr' ? '#8b1d41' : 'rgba(255,255,255,0.3)'),
+                color: '#fff', border: `1px solid ${preview.lang === 'fr' ? '#8b1d41' : 'rgba(255,255,255,0.3)'}`,
               }}>FR</button>
             )}
           </div>
         </div>
         <iframe
           ref={iframeRef}
-          onLoad={iframeLoaded}
+          onLoad={writeIframe}
           style={{ flex: 1, border: 'none', width: '100%' }}
           srcDoc="<html><body></body></html>"
         />
@@ -197,62 +218,75 @@ export default function Home() {
     );
   }
 
-  // ─── NEWSLETTER LIST ───
+  // ─── NEWSLETTER LIST (DASHBOARD) ───
   if (newsletters.length > 0) {
+    const grouped: Record<string, DiscoveredNewsletter[]> = {};
+    for (const n of newsletters) {
+      if (!grouped[n.folder]) grouped[n.folder] = [];
+      grouped[n.folder].push(n);
+    }
+
     return (
       <div style={{ minHeight: '100vh', background: '#f2f3f2' }}>
         <header style={{ background: '#1a1a2e', color: '#fff', padding: '32px 40px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div>
               <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>Newsletter Preview</h1>
               <p style={{ fontSize: 14, opacity: 0.7, margin: 0 }}>
                 Found {newsletters.length} newsletter{newsletters.length > 1 ? 's' : ''}. Select one to preview.
               </p>
             </div>
-            <button onClick={fullReset} style={{
+            <button onClick={() => { setFiles(null); setNewsletters([]); setError(null); }} style={{
               background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
               color: '#fff', padding: '8px 16px', borderRadius: 4, cursor: 'pointer',
               fontSize: 13, fontWeight: 500, fontFamily: 'inherit',
             }}>Drop another folder</button>
           </div>
         </header>
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 20, padding: '32px 40px', maxWidth: 1200, margin: '0 auto',
-        }}>
-          {newsletters.map((n) => {
-            const name = n.slug.replace('pe-newsletter-', '').replace(/(\d{2})$/, ' 20$1')
-              .replace(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i, m => m.charAt(0).toUpperCase() + m.slice(1));
-            return (
-              <div key={n.slug} style={{
-                background: '#fff', borderRadius: 12, padding: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-              }}>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#383b3e', marginBottom: 16, textTransform: 'capitalize' }}>
-                  {name}
-                </div>
-                <div style={{ display: 'flex', gap: 12 }}>
-                  {n.hasEn && (
-                    <button onClick={() => openPreview(n, 'en')} style={{
-                      padding: '8px 20px', borderRadius: 4, fontSize: 14, fontWeight: 600,
-                      background: '#8b1d41', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-                    }}>English</button>
-                  )}
-                  {n.hasFr && (
-                    <button onClick={() => openPreview(n, 'fr')} style={{
-                      padding: '8px 20px', borderRadius: 4, fontSize: 14, fontWeight: 600,
-                      background: '#f2f3f2', color: '#383b3e', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-                    }}>French</button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+
+        {Object.entries(grouped).map(([folder, items]) => (
+          <div key={folder} style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
+            <h2 style={{ fontSize: 13, color: '#606366', letterSpacing: 1, textTransform: 'uppercase', padding: '24px 0 12px' }}>
+              {folder}
+            </h2>
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16,
+            }}>
+              {items.map((n) => {
+                const name = n.slug.replace('pe-newsletter-', '').replace(/(\d{2})$/, ' 20$1')
+                  .replace(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i, m => m.charAt(0).toUpperCase() + m.slice(1));
+                return (
+                  <div key={n.id} style={{
+                    background: '#fff', borderRadius: 12, padding: 24,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                  }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: '#383b3e', marginBottom: 16, textTransform: 'capitalize' }}>
+                      {name}
+                    </div>
+                    <div style={{ display: 'flex', gap: 12 }}>
+                      {n.hasEn && (
+                        <button onClick={() => openPreview(n, 'en')} style={{
+                          padding: '8px 20px', borderRadius: 4, fontSize: 14, fontWeight: 600,
+                          background: '#8b1d41', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                        }}>English</button>
+                      )}
+                      {n.hasFr && (
+                        <button onClick={() => openPreview(n, 'fr')} style={{
+                          padding: '8px 20px', borderRadius: 4, fontSize: 14, fontWeight: 600,
+                          background: '#f2f3f2', color: '#383b3e', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                        }}>French</button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
         {loading && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
-            <div style={{ background: '#fff', padding: '24px 32px', borderRadius: 12, fontSize: 16, fontWeight: 600 }}>
-              Rendering preview...
-            </div>
+            <div style={{ background: '#fff', padding: '24px 32px', borderRadius: 12, fontSize: 16, fontWeight: 600 }}>Rendering...</div>
           </div>
         )}
       </div>
@@ -268,8 +302,7 @@ export default function Home() {
       style={{
         minHeight: '100vh', display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        background: dragging ? '#e8e0f0' : '#f2f3f2',
-        transition: 'background 0.2s',
+        background: dragging ? '#e8e0f0' : '#f2f3f2', transition: 'background 0.2s',
       }}
     >
       <div style={{
@@ -285,17 +318,25 @@ export default function Home() {
           Drag &amp; drop a newsletter folder here to preview it.
         </p>
         <p style={{ fontSize: 13, color: '#999', marginTop: 16 }}>
-          The folder should contain <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>pe-newsletter-*-en.json</code> and
-          a component subfolder with <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.html</code> / <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.scss</code>
+          Drop a single newsletter folder or a parent folder containing multiple newsletters.
+          <br />
+          Expects <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>pe-newsletter-*-en.json</code> + a component subfolder with <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.html</code> / <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.scss</code>
         </p>
         <p style={{ fontSize: 12, color: '#bbb', marginTop: 24 }}>
-          Files never leave your browser — only SCSS is sent to the server for compilation.
+          Files stay in your browser. Only SCSS is sent to the server for compilation.
         </p>
       </div>
+
       {loading && (
-        <div style={{ marginTop: 24, fontSize: 16, fontWeight: 600, color: '#8b1d41' }}>
-          Reading files...
-        </div>
+        <div style={{ marginTop: 24, fontSize: 16, fontWeight: 600, color: '#8b1d41' }}>Reading files...</div>
+      )}
+
+      {error && (
+        <div style={{
+          marginTop: 24, padding: '12px 24px', background: '#fff3f3',
+          border: '1px solid #ffcccc', borderRadius: 8, color: '#c0392b',
+          fontSize: 14, maxWidth: 500, textAlign: 'center',
+        }}>{error}</div>
       )}
     </div>
   );
