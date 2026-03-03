@@ -100,6 +100,9 @@ async function readAllEntries(dirEntry: FileSystemDirectoryEntry): Promise<FileS
   return all;
 }
 
+const IMAGE_RE = /\.(jpg|jpeg|png|gif|svg|webp|ico)$/i;
+const TEXT_RE = /\.(json|html|scss)$/i;
+
 async function readDirectory(entry: FileSystemDirectoryEntry): Promise<FileMap> {
   const files: FileMap = {};
   async function walk(dirEntry: FileSystemDirectoryEntry, prefix: string) {
@@ -107,7 +110,7 @@ async function readDirectory(entry: FileSystemDirectoryEntry): Promise<FileMap> 
     for (const e of entries) {
       const fullPath = prefix ? `${prefix}/${e.name}` : e.name;
       if (e.isFile) {
-        if (/\.(json|html|scss)$/i.test(e.name)) {
+        if (TEXT_RE.test(e.name)) {
           const text = await new Promise<string>((res, rej) => {
             (e as FileSystemFileEntry).file((file) => {
               const r = new FileReader();
@@ -117,6 +120,16 @@ async function readDirectory(entry: FileSystemDirectoryEntry): Promise<FileMap> 
             }, rej);
           });
           files[fullPath] = text;
+        } else if (IMAGE_RE.test(e.name)) {
+          const dataUrl = await new Promise<string>((res, rej) => {
+            (e as FileSystemFileEntry).file((file) => {
+              const r = new FileReader();
+              r.onload = () => res(r.result as string);
+              r.onerror = rej;
+              r.readAsDataURL(file);
+            }, rej);
+          });
+          files[fullPath] = dataUrl;
         }
       } else if (e.isDirectory) {
         await walk(e as FileSystemDirectoryEntry, fullPath);
@@ -213,8 +226,16 @@ export default function Home() {
         const relativePath = file.webkitRelativePath || file.name;
         const parts = relativePath.split('/');
         const pathWithoutRoot = parts.slice(1).join('/');
-        if (/\.(json|html|scss)$/i.test(file.name)) {
+        if (TEXT_RE.test(file.name)) {
           allFiles[pathWithoutRoot] = await file.text();
+        } else if (IMAGE_RE.test(file.name)) {
+          const dataUrl = await new Promise<string>((res, rej) => {
+            const r = new FileReader();
+            r.onload = () => res(r.result as string);
+            r.onerror = rej;
+            r.readAsDataURL(file);
+          });
+          allFiles[pathWithoutRoot] = dataUrl;
         }
       }
       await processFiles(allFiles);

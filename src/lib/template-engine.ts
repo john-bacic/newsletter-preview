@@ -294,5 +294,18 @@ export function renderNewsletter(files: FileMap, newsletter: DiscoveredNewslette
   html = resolveInterpolations(html, contexts);
   html = resolveBindings(html, contexts);
   html = postProcess(html);
+  html = resolveImagePaths(html, files);
   return html;
+}
+
+function resolveImagePaths(html: string, files: FileMap): string {
+  return html.replace(/src="([^"]+)"/g, (full, srcPath: string) => {
+    if (srcPath.startsWith('data:') || srcPath.startsWith('http')) return full;
+    const match = Object.keys(files).find((p) => {
+      if (!files[p].startsWith('data:')) return false;
+      return p === srcPath || p.endsWith('/' + srcPath) || p.endsWith(srcPath.replace(/^\.\//, ''));
+    });
+    if (match) return `src="${files[match]}"`;
+    return full;
+  });
 }
