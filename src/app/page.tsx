@@ -485,12 +485,24 @@ export default function Home() {
         }}>
           Browse folder…
         </button>
-        <p style={{ fontSize: 13, color: '#999', marginTop: 20 }}>
-          Single newsletter folder or a parent containing multiple newsletters.
-          <br />
-          Expects <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>pe-newsletter-*-en.json</code> + component subfolder with <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.html</code> / <code style={{ background: '#e8e8e8', padding: '2px 6px', borderRadius: 4 }}>.component.scss</code>
-        </p>
-        <p style={{ fontSize: 12, color: '#bbb', marginTop: 20 }}>
+        <div style={{ fontSize: 12, color: '#999', marginTop: 20, textAlign: 'left', background: '#f8f8f8', borderRadius: 8, padding: '14px 18px', lineHeight: 1.7 }}>
+          <div style={{ fontWeight: 600, color: '#666', marginBottom: 4 }}>Expected folder structure:</div>
+          <pre style={{ margin: 0, fontFamily: "'SF Mono', Menlo, monospace", fontSize: 11, color: '#777', whiteSpace: 'pre', overflowX: 'auto' }}>{
+`your-folder/
+├── pe-newsletter-*-en.json
+├── pe-newsletter-*-fr.json
+├── pe-newsletter-footer-en.json
+├── pe-newsletter-*/
+│   ├── *.component.html
+│   └── *.component.scss
+└── assets/
+    └── images/
+        └── pe-newsletter/
+            ├── cover.jpg
+            ├── icon.svg
+            └── ...`}</pre>
+        </div>
+        <p style={{ fontSize: 12, color: '#bbb', marginTop: 16 }}>
           Files stay in your browser. Only SCSS is sent to the server for compilation.
         </p>
       </div>
