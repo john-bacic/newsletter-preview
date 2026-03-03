@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Newsletter Preview',
-  description: 'CIBC Premium Edge Newsletter Preview Server',
+  description: 'Drag & drop CIBC Premium Edge newsletter folders to preview them',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
